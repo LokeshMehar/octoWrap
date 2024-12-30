@@ -131,6 +131,7 @@ const DesignConfigurator = ({
       const file = new File([blob], 'filename.png', { type: 'image/png' })
 
       await startUpload([file], { configId })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       toast({
         title: 'Something went wrong',
