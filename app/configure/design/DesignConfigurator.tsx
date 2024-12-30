@@ -1,8 +1,11 @@
 'use client'
+
+import HandleComponent from '@/components/HandleComponent'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn, formatPrice } from '@/lib/utils'
 import NextImage from 'next/image'
+import { Rnd } from 'react-rnd'
 import { RadioGroup } from '@headlessui/react'
 import { useRef, useState } from 'react'
 import {
@@ -70,12 +73,12 @@ const DesignConfigurator = ({
     finish: FINISHES.options[0],
   })
 
-  const [renderedDimension] = useState({
+  const [renderedDimension, setRenderedDimension] = useState({
     width: imageDimensions.width / 4,
     height: imageDimensions.height / 4,
   })
 
-  const [renderedPosition] = useState({
+  const [renderedPosition, setRenderedPosition] = useState({
     x: 150,
     y: 205,
   })
@@ -128,8 +131,7 @@ const DesignConfigurator = ({
       const file = new File([blob], 'filename.png', { type: 'image/png' })
 
       await startUpload([file], { configId })
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
+    } catch (err) {
       toast({
         title: 'Something went wrong',
         description:
@@ -175,8 +177,42 @@ const DesignConfigurator = ({
           />
         </div>
 
-        
-          
+        <Rnd
+          default={{
+            x: 150,
+            y: 205,
+            height: imageDimensions.height / 4,
+            width: imageDimensions.width / 4,
+          }}
+          onResizeStop={(_, __, ref, ___, { x, y }) => {
+            setRenderedDimension({
+              height: parseInt(ref.style.height.slice(0, -2)),
+              width: parseInt(ref.style.width.slice(0, -2)),
+            })
+
+            setRenderedPosition({ x, y })
+          }}
+          onDragStop={(_, data) => {
+            const { x, y } = data
+            setRenderedPosition({ x, y })
+          }}
+          className='absolute z-20 border-[3px] border-primary'
+          lockAspectRatio
+          resizeHandleComponent={{
+            bottomRight: <HandleComponent />,
+            bottomLeft: <HandleComponent />,
+            topRight: <HandleComponent />,
+            topLeft: <HandleComponent />,
+          }}>
+          <div className='relative w-full h-full'>
+            <NextImage
+              src={imageUrl}
+              fill
+              alt='your image'
+              className='pointer-events-none'
+            />
+          </div>
+        </Rnd>
       </div>
 
       <div className='h-[37.5rem] w-full col-span-full lg:col-span-1 flex flex-col bg-white'>
