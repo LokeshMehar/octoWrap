@@ -14,12 +14,24 @@ const Page = () => {
   const [isDragOver, setIsDragOver] = useState<boolean>(false)
   const [uploadProgress, setUploadProgress] = useState<number>(0)
   const router = useRouter()
+  const [isPending, startTransition] = useTransition()
 
   const { startUpload, isUploading } = useUploadThing('imageUploader', {
-    onClientUploadComplete: ([data]) => {
-      const configId = data.serverData.configId
-      startTransition(() => {
-        router.push(`/configure/design?id=${configId}`)
+    onClientUploadComplete: (res) => {
+      if (res && res[0]) {
+        const configId = res[0].serverData?.configId
+        if (configId) {
+          startTransition(() => {
+            router.push(`/configure/design?id=${configId}`)
+          })
+        }
+      }
+    },
+    onUploadError: (error) => {
+      toast({
+        title: 'Upload failed',
+        description: error.message,
+        variant: 'destructive',
       })
     },
     onUploadProgress(p) {
@@ -39,12 +51,19 @@ const Page = () => {
     })
   }
 
-  const onDropAccepted = (acceptedFiles: File[]) => {
-    startUpload(acceptedFiles, { configId:undefined  })
-    setIsDragOver(false)
+  const onDropAccepted = async (acceptedFiles: File[]) => {
+    try {
+      await startUpload(acceptedFiles, { configId: undefined })
+      setIsDragOver(false)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast({
+        title: 'Upload failed',
+        description: 'An error occurred while uploading the file.',
+        variant: 'destructive',
+      })
+    }
   }
-
-  const [isPending, startTransition] = useTransition()
 
   return (
     <div
