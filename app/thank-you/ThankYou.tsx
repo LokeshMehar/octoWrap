@@ -1,13 +1,13 @@
 "use client";
 
 import PhonePreview from "@/components/PhonePreview";
-import { toast } from "@/components/ui/use-toast";
 import { formatPrice } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { getPaymentStatus } from "./actions";
+import { toast } from "@/hooks/use-toast";
 
 const ThankYou = () => {
   const searchParams = useSearchParams();
