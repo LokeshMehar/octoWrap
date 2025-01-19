@@ -18,31 +18,32 @@ const Page = () => {
 
   const { startUpload, isUploading } = useUploadThing('imageUploader', {
     onClientUploadComplete: (res) => {
-      if (res && res[0]) {
-        const configId = res[0].serverData?.configId
-        if (configId) {
-          startTransition(() => {
-            router.push(`/configure/design?id=${configId}`)
-          })
-        }
-      }
+      if (!res?.[0]?.serverData?.configId) return
+      
+      // Clear the progress
+      setUploadProgress(0)
+      
+      // Navigate to the next page
+      const configId = res[0].serverData.configId
+      router.push(`/configure/design?id=${configId}`)
     },
-    onUploadError: (error) => {
+    onUploadProgress: (progress) => {
+      setUploadProgress(progress)
+    },
+    onUploadError: () => {
+      setUploadProgress(0)
       toast({
-        title: 'Upload failed',
-        description: error.message,
-        variant: 'destructive',
+        title: "Upload failed",
+        description: "There was an error uploading your image. Please try again.",
+        variant: "destructive"
       })
-    },
-    onUploadProgress(p) {
-      setUploadProgress(p)
-    },
+    }
   })
 
   const onDropRejected = (rejectedFiles: FileRejection[]) => {
     const [file] = rejectedFiles
-
     setIsDragOver(false)
+    setUploadProgress(0)
 
     toast({
       title: `${file.file.type} type is not supported.`,
@@ -51,19 +52,14 @@ const Page = () => {
     })
   }
 
-  const onDropAccepted = async (acceptedFiles: File[]) => {
-    try {
-      await startUpload(acceptedFiles, { configId: undefined })
-      setIsDragOver(false)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (error) {
-      toast({
-        title: 'Upload failed',
-        description: 'An error occurred while uploading the file.',
-        variant: 'destructive',
-      })
-    }
+  const onDropAccepted = (acceptedFiles: File[]) => {
+    setUploadProgress(0)
+    startUpload(acceptedFiles, { configId: undefined })
+    setIsDragOver(false)
   }
+
+  // Only show progress if we're actually uploading and have progress
+  const showProgress = isUploading && uploadProgress > 0 && uploadProgress < 100
 
   return (
     <div
@@ -91,7 +87,7 @@ const Page = () => {
               <input {...getInputProps()} />
               {isDragOver ? (
                 <MousePointerSquareDashed className='h-6 w-6 text-zinc-500 mb-2' />
-              ) : isUploading || isPending ? (
+              ) : isUploading ? (
                 <Loader2 className='animate-spin h-6 w-6 text-zinc-500 mb-2' />
               ) : (
                 <Image className='h-6 w-6 text-zinc-500 mb-2' />
@@ -100,14 +96,12 @@ const Page = () => {
                 {isUploading ? (
                   <div className='flex flex-col items-center'>
                     <p>Uploading...</p>
-                    <Progress
-                      value={uploadProgress}
-                      className='mt-2 w-40 h-2 bg-gray-300'
-                    />
-                  </div>
-                ) : isPending ? (
-                  <div className='flex flex-col items-center'>
-                    <p>Redirecting, please wait...</p>
+                    {showProgress && (
+                      <Progress
+                        value={uploadProgress}
+                        className='mt-2 w-40 h-2 bg-gray-300'
+                      />
+                    )}
                   </div>
                 ) : isDragOver ? (
                   <p>
@@ -121,9 +115,7 @@ const Page = () => {
                 )}
               </div>
 
-              {isPending ? null : (
-                <p className='text-xs text-zinc-500'>PNG, JPG, JPEG</p>
-              )}
+              <p className='text-xs text-zinc-500'>PNG, JPG, JPEG</p>
             </div>
           )}
         </Dropzone>

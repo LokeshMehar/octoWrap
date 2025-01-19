@@ -25,10 +25,10 @@ import { Button } from '@/components/ui/button'
 import { ArrowRight, Check, ChevronsUpDown } from 'lucide-react'
 import { BASE_PRICE } from '@/config/products'
 import { useUploadThing } from '@/lib/uploadthing'
+import { useToast } from '@/components/ui/use-toast'
 import { useMutation } from '@tanstack/react-query'
 import { saveConfig as _saveConfig, SaveConfigArgs } from './actions'
 import { useRouter } from 'next/navigation'
-import { useToast } from '@/hooks/use-toast'
 
 interface DesignConfiguratorProps {
   configId: string
@@ -131,7 +131,6 @@ const DesignConfigurator = ({
       const file = new File([blob], 'filename.png', { type: 'image/png' })
 
       await startUpload([file], { configId })
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       toast({
         title: 'Something went wrong',
