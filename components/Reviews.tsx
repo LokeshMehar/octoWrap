@@ -18,6 +18,8 @@ const PHONES = [
 function splitArray<T>(array: Array<T>, numParts: number) {
   const result: Array<Array<T>> = []
 
+  console.log("aaya")
+
   for (let i = 0; i < array.length; i++) {
     const index = i % numParts
     if (!result[index]) {
