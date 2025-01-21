@@ -10,20 +10,24 @@ export const createCheckoutSession = async ({
   configId,
 }: {
   configId: string;
-}) => {
-  try {
+}) =>
+{
+  try
+  {
     const configuration = await db.configuration.findUnique({
       where: { id: configId },
     });
 
-    if (!configuration) {
+    if (!configuration)
+    {
       throw new Error("No such configuration found");
     }
 
     const { getUser } = getKindeServerSession();
     const user = await getUser();
 
-    if (!user) {
+    if (!user)
+    {
       throw new Error("You need to be logged in");
     }
 
@@ -35,6 +39,7 @@ export const createCheckoutSession = async ({
       price += PRODUCT_PRICES.material.polycarbonate;
 
     let order: Order | undefined = undefined;
+    console.log(user.id);
 
     const existingOrder = await db.order.findFirst({
       where: {
@@ -43,9 +48,11 @@ export const createCheckoutSession = async ({
       },
     });
 
-    if (existingOrder) {
+    if (existingOrder)
+    {
       order = existingOrder;
-    } else {
+    } else
+    {
       order = await db.order.create({
         data: {
           amount: price / 100,
@@ -78,7 +85,8 @@ export const createCheckoutSession = async ({
     });
 
     return { url: stripeSession.url };
-  } catch (error: any) {
+  } catch (error: any)
+  {
     console.error("Error creating checkout session: ", error.message);
 
     return { url: null };

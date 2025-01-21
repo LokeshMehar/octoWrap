@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // your config options here
+  images: {
+    domains: ['utfs.io'], // Add the external domain here
+  },
+  // Other config options can go here
 }
 
-module.exports = nextConfig
+module.exports = nextConfig;
