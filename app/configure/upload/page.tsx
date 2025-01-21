@@ -4,13 +4,14 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useUploadThing } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
+import { log } from "console";
 import {
   Loader2,
   Image as LucideImage,
   MousePointerSquareDashed,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import Dropzone, { FileRejection } from "react-dropzone";
 
 const Page = () => {
@@ -19,24 +20,87 @@ const Page = () => {
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const [isUploadComplete, setIsUploadComplete] = useState(false);
+
+  useEffect(() => {
+    if (uploadProgress === 100 && !isUploadComplete) {
+      console.log("Upload reached 100%, waiting for completion callback...");
+      const timer = setTimeout(() => {
+        if (!isUploadComplete) {
+          console.log("Upload completion callback didn't trigger, forcing completion...");
+          setIsUploadComplete(true);
+        }
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [uploadProgress, isUploadComplete]);
 
   const { startUpload, isUploading } = useUploadThing("imageUploader", {
     onClientUploadComplete: ([data]) => {
-      const configId = data.serverData.configId;
+      console.log("Upload completed callback triggered:", data);
+      setIsUploadComplete(true);
+      
+      if (!data) {
+        console.error("No data received from upload");
+        toast({
+          title: "Upload Error",
+          description: "No data received from upload",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      console.log("Complete upload response:", JSON.stringify(data, null, 2));
+
+      console.log(data)
+
+      const configId = data?.serverData?.configId;
+      console.log("Extracted Config ID:", configId);
+
+      if (!configId) {
+        console.error("No configId in response. Full response:", data);
+        toast({
+          title: "Upload Error",
+          description: "Configuration ID not received",
+          variant: "destructive",
+        });
+        return;
+      }
+
       startTransition(() => {
-        router.push(`/configure/design?id=${configId}`);
+        console.log("Starting navigation to configure/design page");
+        try {
+          router.push(`/configure/design?id=${configId}`);
+          console.log("Navigation initiated");
+        } catch (error) {
+          console.error("Navigation error:", error);
+          toast({
+            title: "Navigation Error",
+            description: "Failed to navigate to design page",
+            variant: "destructive",
+          });
+        }
       });
     },
     onUploadProgress(p) {
+      console.log("Upload progress:", p);
       setUploadProgress(p);
+    },
+    onUploadError: (error) => {
+      console.error("Upload error occurred:", error);
+      setIsUploadComplete(false);
+      toast({
+        title: "Upload Failed",
+        description: error.message || "An error occurred during upload",
+        variant: "destructive",
+      });
     },
   });
 
   const onDropRejected = (rejectedFiles: FileRejection[]) => {
     const [file] = rejectedFiles;
-
+    console.log("File rejected:", file);
     setIsDragOver(false);
-
     toast({
       title: `${file.file.type} type is not supported.`,
       description: "Please choose a PNG, JPG, or JPEG image instead.",
@@ -45,8 +109,10 @@ const Page = () => {
   };
 
   const onDropAccepted = (acceptedFiles: File[]) => {
+    console.log("Files accepted:", acceptedFiles);
+    setIsUploadComplete(false);
+    setUploadProgress(0);
     startUpload(acceptedFiles, { configId: undefined });
-
     setIsDragOver(false);
   };
 
@@ -95,7 +161,7 @@ const Page = () => {
                   </div>
                 ) : isPending ? (
                   <div className="flex flex-col items-center">
-                    <p>Redirecting, please wait...</p>
+                    <p>Processing upload and preparing to redirect...</p>
                   </div>
                 ) : isDragOver ? (
                   <p>
