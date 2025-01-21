@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useToast } from "@/components/ui/use-toast";
 import { BASE_PRICE } from "@/config/products";
 import { useUploadThing } from "@/lib/uploadthing";
 import { cn, formatPrice } from "@/lib/utils";
@@ -28,7 +29,6 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { Rnd } from "react-rnd";
 import { saveConfig as _saveConfig, SaveConfigArgs } from "./actions";
-import { useToast } from "@/hooks/use-toast";
 
 interface DesignConfiguratorProps {
   configId: string;
