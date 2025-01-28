@@ -6,7 +6,7 @@ import { PrismaClient } from '@prisma/client';
 
 const f = createUploadthing();
 
-const prisma = new PrismaClient({ log: ['info', 'query'], })
+const prisma = new PrismaClient()
 
 export const ourFileRouter = {
   imageUploader: f({ image: { maxFileSize: "4MB" } })

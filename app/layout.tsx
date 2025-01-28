@@ -6,13 +6,13 @@ import { Toaster } from '@/components/ui/toaster'
 import Providers from '@/components/Providers'
 import { constructMetadata } from '@/lib/utils'
 import { AuthProvider } from './AuthProvider'
-import { PrismaClient } from '@prisma/client'
+// import { PrismaClient } from '@prisma/client'
 
 const recursive = Recursive({ subsets: ['latin'] })
 
 export const metadata = constructMetadata()
 
-const prisma = new PrismaClient({ log: ['info', 'query'], })
+// const prisma = new PrismaClient({ log: ['info', 'query'], })
 
 export default function RootLayout({
   children,
@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
 
-  console.log(prisma.configuration.findMany())
+  // console.log(prisma.configuration.findMany())
 
 
 
