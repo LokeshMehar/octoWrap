@@ -16,7 +16,6 @@ export async function POST(req: Request)
     const body = await req.text();
     const headersList = await headers();
     const signature = headersList.get("stripe-signature");
-    let email: CreateEmailResponse;
 
     if (!signature)
     {
@@ -27,17 +26,18 @@ export async function POST(req: Request)
       body,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET!
-
     );
+
     console.log("Received event:", event);
+
     if (event.type === "checkout.session.completed")
     {
-      if (!event.data.object.customer_details?.email)
+      const session = event.data.object as Stripe.Checkout.Session;
+
+      if (!session.customer_details?.email)
       {
         throw new Error("Missing user email");
       }
-
-      const session = event.data.object as Stripe.Checkout.Session;
 
       const { userId, orderId } = session.metadata || {
         userId: null,
@@ -49,8 +49,8 @@ export async function POST(req: Request)
         throw new Error("Invalid request metadata");
       }
 
-      const billingAddress = session.customer_details!.address;
-      const shippingAddress = session.shipping_details!.address;
+      const billingAddress = session.customer_details.address;
+      const shippingAddress = session.shipping_details?.address;
 
       const updatedOrder = await db.order.update({
         where: {
@@ -60,53 +60,47 @@ export async function POST(req: Request)
           isPaid: true,
           shippingAddress: {
             create: {
-              name: session.customer_details!.name!,
-              city: shippingAddress!.city!,
-              country: shippingAddress!.country!,
-              postalCode: shippingAddress!.postal_code!,
-              street: shippingAddress!.line1!,
-              state: shippingAddress!.state,
-              id: "", // Placeholder for ID
-              phoneNumber: null, // Placeholder for phoneNumber
-              createdAt: new Date(), // Added createdAt
-              updatedAt: new Date(), // Added updatedAt
+              name: session.customer_details.name || "Unknown Name",
+              street: shippingAddress?.line1 || "Unknown Street",
+              city: shippingAddress?.city || "Unknown City",
+              postalCode: shippingAddress?.postal_code || "00000",
+              country: shippingAddress?.country || "Unknown Country",
+              state: shippingAddress?.state || null,
+              phoneNumber: session.customer_details.phone || null,
             },
           },
           billingAddress: {
             create: {
-              name: session.customer_details!.name!,
-              city: billingAddress!.city!,
-              country: billingAddress!.country!,
-              postalCode: billingAddress!.postal_code!,
-              street: billingAddress!.line1!,
-              state: billingAddress!.state,
-              id: "", // Placeholder for ID
-              phoneNumber: null, // Placeholder for phoneNumber
-              createdAt: new Date(), // Added createdAt
-              updatedAt: new Date(), // Added updatedAt
+              name: session.customer_details.name || "Unknown Name",
+              street: billingAddress?.line1 || "Unknown Street",
+              city: billingAddress?.city || "Unknown City",
+              postalCode: billingAddress?.postal_code || "00000",
+              country: billingAddress?.country || "Unknown Country",
+              state: billingAddress?.state || null,
+              phoneNumber: session.customer_details.phone || null,
             },
           },
         },
       });
 
-      email = await resend.emails.send({
-        from: `CaseCobra <${RESEND_EMAIL}>`,
-        to: [event.data.object.customer_details.email],
+      const email = await resend.emails.send({
+        from: `OctoWrap <${RESEND_EMAIL}>`,
+        to: [session.customer_details.email],
         subject: "Thanks for your order!",
         react: OrderReceivedEmail({
           orderId,
           orderDate: updatedOrder.createdAt.toLocaleDateString(),
           shippingAddress: {
-            name: session.customer_details!.name!,
-            city: shippingAddress!.city!,
-            country: shippingAddress!.country!,
-            postalCode: shippingAddress!.postal_code!,
-            street: shippingAddress!.line1!,
-            state: shippingAddress!.state,
+            name: session.customer_details.name || "Unknown Name",
+            street: shippingAddress?.line1 || "Unknown Street",
+            city: shippingAddress?.city || "Unknown City",
+            postalCode: shippingAddress?.postal_code || "00000",
+            country: shippingAddress?.country || "Unknown Country",
+            state: shippingAddress?.state || null,
             id: "",
-            phoneNumber: null,
             createdAt: null,
-            updatedAt: null
+            updatedAt: null,
+            phoneNumber: null
           },
         }),
       });
@@ -117,7 +111,7 @@ export async function POST(req: Request)
     return NextResponse.json({ result: event, ok: true });
   } catch (err)
   {
-    console.error("An error occured while processing webhook: ", err);
+    console.error("An error occurred while processing webhook:", err);
 
     return NextResponse.json(
       { message: "Something went wrong", ok: false },
