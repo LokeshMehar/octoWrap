@@ -1,15 +1,22 @@
 'use server'
 
 import { db } from '@/db'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-export const getPaymentStatus = async ({ orderId }: { orderId: string }) => {
-  const { getUser } = getKindeServerSession()
-  const user = await getUser()
+export const getPaymentStatus = async ({ orderId }: { orderId: string }) =>
+{
+  console.log("first")
+  const { getUser } = getKindeServerSession();
+  console.log("second")
+  const user = await getUser();
+  console.log("third")
 
-  if (!user?.id || !user.email) {
+  if (!user?.id || !user.email)
+  {
     throw new Error('You need to be logged in to view this page.')
   }
+
+  console.log("fourth")
 
   const order = await db.order.findFirst({
     where: { id: orderId, userId: user.id },
@@ -21,11 +28,18 @@ export const getPaymentStatus = async ({ orderId }: { orderId: string }) => {
     },
   })
 
+  console.log("fifth")
+
   if (!order) throw new Error('This order does not exist.')
 
-  if (order.isPaid) {
+  console.log("sixth")
+
+  if (order.isPaid)
+  {
+    console.log("seventh")
     return order
-  } else {
+  } else
+  {
     return false
   }
 }
