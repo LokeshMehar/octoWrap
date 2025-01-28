@@ -60,22 +60,30 @@ export async function POST(req: Request)
           isPaid: true,
           shippingAddress: {
             create: {
-              name: session.customer_details?.name ?? "N/A",
-              city: shippingAddress?.city ?? "N/A",
-              country: shippingAddress?.country ?? "N/A",
-              postalCode: shippingAddress?.postal_code ?? "N/A",
-              street: shippingAddress?.line1 ?? "N/A",
-              state: shippingAddress?.state ?? "N/A",
+              name: session.customer_details!.name!,
+              city: shippingAddress!.city!,
+              country: shippingAddress!.country!,
+              postalCode: shippingAddress!.postal_code!,
+              street: shippingAddress!.line1!,
+              state: shippingAddress!.state,
+              id: "", // Placeholder for ID
+              phoneNumber: null, // Placeholder for phoneNumber
+              createdAt: new Date(), // Added createdAt
+              updatedAt: new Date(), // Added updatedAt
             },
           },
           billingAddress: {
             create: {
-              name: session.customer_details?.name ?? "N/A",
-              city: billingAddress?.city ?? "N/A",
-              country: billingAddress?.country ?? "N/A",
-              postalCode: billingAddress?.postal_code ?? "N/A",
-              street: billingAddress?.line1 ?? "N/A",
-              state: billingAddress?.state ?? "N/A",
+              name: session.customer_details!.name!,
+              city: billingAddress!.city!,
+              country: billingAddress!.country!,
+              postalCode: billingAddress!.postal_code!,
+              street: billingAddress!.line1!,
+              state: billingAddress!.state,
+              id: "", // Placeholder for ID
+              phoneNumber: null, // Placeholder for phoneNumber
+              createdAt: new Date(), // Added createdAt
+              updatedAt: new Date(), // Added updatedAt
             },
           },
         },
@@ -96,7 +104,9 @@ export async function POST(req: Request)
             street: shippingAddress!.line1!,
             state: shippingAddress!.state,
             id: "",
-            phoneNumber: null
+            phoneNumber: null,
+            createdAt: null,
+            updatedAt: null
           },
         }),
       });
