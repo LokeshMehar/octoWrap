@@ -8,10 +8,13 @@ import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { getPaymentStatus } from "./actions";
 import { toast } from "@/hooks/use-toast";
+import { log } from "console";
 
 const ThankYou = () => {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId") || "";
+
+  console.log(orderId);
 
   const { data, isError, error } = useQuery({
     queryKey: ["get-payment-status"],

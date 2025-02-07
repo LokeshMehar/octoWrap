@@ -3,7 +3,6 @@ import { Icons } from "@/components/pieces/Icons";
 import MaxWidthWrapper from "@/components/pieces/MaxWidthWrapper";
 import { Reviews } from "@/components/Reviews";
 import { buttonVariants } from "@/components/ui/button";
-import { PrismaClient } from "@prisma/client";
 import { ArrowRight, Check, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

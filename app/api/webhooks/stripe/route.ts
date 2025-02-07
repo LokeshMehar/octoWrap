@@ -16,6 +16,7 @@ export async function POST(req: Request)
     const body = await req.text();
     const headersList = await headers();
     const signature = headersList.get("stripe-signature");
+    let email: CreateEmailResponse;
 
     if (!signature)
     {
@@ -25,19 +26,19 @@ export async function POST(req: Request)
     const event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      process.env.NODE_ENV === "production"
+        ? process.env.STRIPE_WEBHOOK_SECRET!
+        : process.env.STRIPE_WEBHOOK_SECRET_DEV!
     );
-
-    console.log("Received event:", event);
 
     if (event.type === "checkout.session.completed")
     {
-      const session = event.data.object as Stripe.Checkout.Session;
-
-      if (!session.customer_details?.email)
+      if (!event.data.object.customer_details?.email)
       {
         throw new Error("Missing user email");
       }
+
+      const session = event.data.object as Stripe.Checkout.Session;
 
       const { userId, orderId } = session.metadata || {
         userId: null,
@@ -49,8 +50,8 @@ export async function POST(req: Request)
         throw new Error("Invalid request metadata");
       }
 
-      const billingAddress = session.customer_details.address;
-      const shippingAddress = session.shipping_details?.address;
+      const billingAddress = session.customer_details!.address;
+      const shippingAddress = session.shipping_details!.address;
 
       const updatedOrder = await db.order.update({
         where: {
@@ -60,47 +61,45 @@ export async function POST(req: Request)
           isPaid: true,
           shippingAddress: {
             create: {
-              name: session.customer_details.name || "Unknown Name",
-              street: shippingAddress?.line1 || "Unknown Street",
-              city: shippingAddress?.city || "Unknown City",
-              postalCode: shippingAddress?.postal_code || "00000",
-              country: shippingAddress?.country || "Unknown Country",
-              state: shippingAddress?.state || null,
-              phoneNumber: session.customer_details.phone || null,
+              name: session.customer_details!.name!,
+              city: shippingAddress!.city!,
+              country: shippingAddress!.country!,
+              postalCode: shippingAddress!.postal_code!,
+              street: shippingAddress!.line1!,
+              state: shippingAddress!.state,
             },
           },
           billingAddress: {
             create: {
-              name: session.customer_details.name || "Unknown Name",
-              street: billingAddress?.line1 || "Unknown Street",
-              city: billingAddress?.city || "Unknown City",
-              postalCode: billingAddress?.postal_code || "00000",
-              country: billingAddress?.country || "Unknown Country",
-              state: billingAddress?.state || null,
-              phoneNumber: session.customer_details.phone || null,
+              name: session.customer_details!.name!,
+              city: billingAddress!.city!,
+              country: billingAddress!.country!,
+              postalCode: billingAddress!.postal_code!,
+              street: billingAddress!.line1!,
+              state: billingAddress!.state,
             },
           },
         },
       });
 
-      const email = await resend.emails.send({
+      email = await resend.emails.send({
         from: `OctoWrap <${RESEND_EMAIL}>`,
-        to: [session.customer_details.email],
+        to: [event.data.object.customer_details.email],
         subject: "Thanks for your order!",
         react: OrderReceivedEmail({
           orderId,
           orderDate: updatedOrder.createdAt.toLocaleDateString(),
           shippingAddress: {
-            name: session.customer_details.name || "Unknown Name",
-            street: shippingAddress?.line1 || "Unknown Street",
-            city: shippingAddress?.city || "Unknown City",
-            postalCode: shippingAddress?.postal_code || "00000",
-            country: shippingAddress?.country || "Unknown Country",
-            state: shippingAddress?.state || null,
+            name: session.customer_details!.name!,
+            city: shippingAddress!.city!,
+            country: shippingAddress!.country!,
+            postalCode: shippingAddress!.postal_code!,
+            street: shippingAddress!.line1!,
+            state: shippingAddress!.state,
             id: "",
             createdAt: null,
-            updatedAt: null,
-            phoneNumber: null
+            phoneNumber: null,
+            updatedAt: null
           },
         }),
       });
@@ -111,7 +110,7 @@ export async function POST(req: Request)
     return NextResponse.json({ result: event, ok: true });
   } catch (err)
   {
-    console.error("An error occurred while processing webhook:", err);
+    console.error("An error occured while processing webhook: ", err);
 
     return NextResponse.json(
       { message: "Something went wrong", ok: false },
