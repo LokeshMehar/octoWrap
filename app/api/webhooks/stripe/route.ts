@@ -23,12 +23,16 @@ export async function POST(req: Request)
       return new Response("Invalid signature", { status: 400 });
     }
 
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    if (!webhookSecret)
+    {
+      throw new Error("STRIPE_WEBHOOK_SECRET is not defined");
+    }
+
     const event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.NODE_ENV === "production"
-        ? process.env.STRIPE_WEBHOOK_SECRET!
-        : process.env.STRIPE_WEBHOOK_SECRET_DEV!
+      webhookSecret
     );
 
     if (event.type === "checkout.session.completed")
