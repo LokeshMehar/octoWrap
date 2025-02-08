@@ -60,6 +60,8 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     },
   });
 
+  console.log(isAuthenticated);
+
   const handleCheckout = () => {
     if (isAuthenticated ) {
       // create payment session
