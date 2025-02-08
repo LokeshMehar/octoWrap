@@ -10,7 +10,7 @@ import OrderReceivedEmail from "@/components/emails/OrderReceivedEmail";
 
 const RESEND_EMAIL = process.env.RESEND_EMAIL!;
 
-// Convert NextRequest to a raw buffer (Needed for Stripe verification)
+
 async function getRawBody(readable: Readable)
 {
   const chunks: Buffer[] = [];
