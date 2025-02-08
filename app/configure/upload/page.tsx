@@ -4,7 +4,6 @@ import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { useUploadThing } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
-import { log } from "console";
 import {
   Loader2,
   Image as LucideImage,
