@@ -61,8 +61,9 @@ export async function POST(req: NextRequest)
 
       if (!userId || !orderId)
       {
-        throw new Error("Invalid request metadata");
+        throw new Error(`Invalid metadata: ${JSON.stringify(session.metadata)}`);
       }
+
 
       const billingAddress = session.customer_details!.address;
       const shippingAddress = session.shipping_details!.address;
