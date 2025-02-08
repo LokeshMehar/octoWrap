@@ -20,10 +20,6 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
 
-  // console.log(prisma.configuration.findMany())
-
-
-
   return (
     <AuthProvider>
     <html lang='en'>

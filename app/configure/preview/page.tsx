@@ -7,8 +7,6 @@ interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-
-
 export const metadata: Metadata = {
   title: "Preview",
 };
