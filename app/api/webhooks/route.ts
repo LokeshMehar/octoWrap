@@ -101,7 +101,7 @@ export async function POST(req: NextRequest)
       console.log("✅ Order updated in DB:", updatedOrder.id);
 
       // ✅ Send Order Confirmation Email
-      const email = await resend.emails.send({
+      const email: CreateEmailResponse = await resend.emails.send({
         from: `OctoWrap <${RESEND_EMAIL}>`,
         to: [session.customer_details.email],
         subject: "Thanks for your order!",
