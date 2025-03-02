@@ -2,13 +2,13 @@ import Link from 'next/link'
 import MaxWidthWrapper from './pieces/MaxWidthWrapper'
 import { buttonVariants } from './ui/button'
 import { ArrowRight } from 'lucide-react'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+// import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 
 const Navbar = async () => {
-  const { getUser } = getKindeServerSession()
-  const user = await getUser()
+  // const { getUser } = getKindeServerSession()
+  // const user = await getUser()
 
-  const isAdmin = user?.email === process.env.ADMIN_EMAIL
+  // const isAdmin = user?.email === process.env.ADMIN_EMAIL
 
   return (
     <nav className='sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all'>
@@ -19,7 +19,7 @@ const Navbar = async () => {
           </Link>
 
           <div className='h-full flex items-center space-x-4'>
-            {user ? (
+            {/* {user ? (
               <>
                 <Link
                   href='/api/auth/logout'
@@ -81,7 +81,7 @@ const Navbar = async () => {
                   <ArrowRight className='ml-1.5 h-5 w-5' />
                 </Link>
               </>
-            )}
+            )} */}
           </div>
         </div>
       </MaxWidthWrapper>

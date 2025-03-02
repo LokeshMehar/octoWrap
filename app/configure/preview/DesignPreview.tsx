@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
 import { cn, formatPrice } from "@/lib/utils";
 import { COLORS, FINISHES, MODELS } from "@/validators/option-validator";
-import {useKindeBrowserClient} from "@kinde-oss/kinde-auth-nextjs";
+// import {useKindeBrowserClient} from "@kinde-oss/kinde-auth-nextjs";
 import { Configuration } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, Check } from "lucide-react";
@@ -21,7 +21,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const { toast } = useToast();
   const { id } = configuration;
   
-const {isAuthenticated} = useKindeBrowserClient();
+// const {isAuthenticated} = useKindeBrowserClient();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
