@@ -61,17 +61,17 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     },
   });
 
-  const handleCheckout = () => {
-    if (isAuthenticated) {
-      // create payment session
-      createPaymentSession({ configId: id });
-    } else 
-    {
-      // need to log in
-      localStorage.setItem("configurationId", id);
-      setIsLoginModalOpen(true);
-    }
-  };
+  // const handleCheckout = () => {
+  //   if (isAuthenticated) {
+  //     // create payment session
+  //     createPaymentSession({ configId: id });
+  //   } else 
+  //   {
+  //     // need to log in
+  //     localStorage.setItem("configurationId", id);
+  //     setIsLoginModalOpen(true);
+  //   }
+  // };
 
   return (
     <>
@@ -166,7 +166,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
             <div className="mt-8 flex justify-end pb-12">
               <Button
-                onClick={() => handleCheckout()}
+                // onClick={() => handleCheckout()}
                 isLoading={isPending}
                 className="px-4 sm:px-6 lg:px-8"
               >

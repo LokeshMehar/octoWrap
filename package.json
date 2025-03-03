@@ -10,6 +10,8 @@
     "vercel-build": "prisma generate && next build"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.12.2",
+    "@clerk/themes": "^2.2.20",
     "@headlessui/react": "^2.2.0",
     "@prisma/client": "^6.1.0",
     "@radix-ui/react-aspect-ratio": "^1.1.1",

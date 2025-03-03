@@ -1,5 +1,14 @@
 import Link from 'next/link'
 import MaxWidthWrapper from './pieces/MaxWidthWrapper'
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
+
+import { dark, neobrutalism, shadesOfPurple } from '@clerk/themes'
 import { buttonVariants } from './ui/button'
 import { ArrowRight } from 'lucide-react'
 // import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
@@ -82,6 +91,15 @@ const Navbar = async () => {
                 </Link>
               </>
             )} */}
+            <SignedOut>
+              <SignInButton>
+              </SignInButton>
+              <SignUpButton>
+              </SignUpButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
         </div>
       </MaxWidthWrapper>
