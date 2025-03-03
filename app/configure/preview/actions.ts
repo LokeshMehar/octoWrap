@@ -3,7 +3,7 @@
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
 import { db } from "@/db";
 import { stripe } from "@/lib/stripe";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { Order } from "@prisma/client";
 
 export const createCheckoutSession = async ({
@@ -23,13 +23,14 @@ export const createCheckoutSession = async ({
       throw new Error("No such configuration found");
     }
 
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-
+    // Get the authenticated user from Clerk
+    const user = await currentUser();
     if (!user)
     {
       throw new Error("You need to be logged in");
     }
+
+    const userId = user.id;
 
     const { finish, material } = configuration;
 
@@ -39,11 +40,11 @@ export const createCheckoutSession = async ({
       price += PRODUCT_PRICES.material.polycarbonate;
 
     let order: Order | undefined = undefined;
-    console.log(user.id);
+    console.log(userId);
 
     const existingOrder = await db.order.findFirst({
       where: {
-        userId: user.id,
+        userId: userId,
         configurationId: configuration.id,
       },
     });
@@ -56,7 +57,7 @@ export const createCheckoutSession = async ({
       order = await db.order.create({
         data: {
           amount: price / 100,
-          userId: user.id,
+          userId: userId,
           configurationId: configuration.id,
         },
       });
@@ -78,7 +79,7 @@ export const createCheckoutSession = async ({
       mode: "payment",
       shipping_address_collection: { allowed_countries: ["NG", "US", "GB"] },
       metadata: {
-        userId: user.id,
+        userId: userId,
         orderId: order.id,
       },
       line_items: [{ price: product.default_price as string, quantity: 1 }],
@@ -88,7 +89,6 @@ export const createCheckoutSession = async ({
   } catch (error: any)
   {
     console.error("Error creating checkout session: ", error.message);
-
     return { url: null };
   }
 };

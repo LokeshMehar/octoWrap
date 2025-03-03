@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
 import { cn, formatPrice } from "@/lib/utils";
 import { COLORS, FINISHES, MODELS } from "@/validators/option-validator";
-// import {useKindeBrowserClient} from "@kinde-oss/kinde-auth-nextjs";
+import {useKindeBrowserClient} from "@kinde-oss/kinde-auth-nextjs";
 import { Configuration } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import { ArrowRight, Check } from "lucide-react";
@@ -21,7 +21,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const { toast } = useToast();
   const { id } = configuration;
   
-// const {isAuthenticated} = useKindeBrowserClient();
+const {isAuthenticated} = useKindeBrowserClient();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
@@ -61,17 +61,17 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     },
   });
 
-  // const handleCheckout = () => {
-  //   if (isAuthenticated) {
-  //     // create payment session
-  //     createPaymentSession({ configId: id });
-  //   } else 
-  //   {
-  //     // need to log in
-  //     localStorage.setItem("configurationId", id);
-  //     setIsLoginModalOpen(true);
-  //   }
-  // };
+  const handleCheckout = () => {
+    if (isAuthenticated) {
+      // create payment session
+      createPaymentSession({ configId: id });
+    } else 
+    {
+      // need to log in
+      localStorage.setItem("configurationId", id);
+      setIsLoginModalOpen(true);
+    }
+  };
 
   return (
     <>
@@ -166,7 +166,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
             <div className="mt-8 flex justify-end pb-12">
               <Button
-                // onClick={() => handleCheckout()}
+                onClick={() => handleCheckout()}
                 isLoading={isPending}
                 className="px-4 sm:px-6 lg:px-8"
               >
