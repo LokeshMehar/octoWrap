@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/table";
 import { db } from "@/db";
 import { formatPrice } from "@/lib/utils";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { currentUser } from '@clerk/nextjs/server'
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import StatusDropdown from "./StatusDropdown";
@@ -27,12 +27,13 @@ export const metadata: Metadata = {
 };
 
 const Page = async () => {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-
+  const user = await currentUser();
+  const userId = user?.id;
+  
   const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
-
-  if (!user || user.email !== ADMIN_EMAIL) {
+  const adminUser = await db.user.findFirst({ where: { email: ADMIN_EMAIL } });
+  
+  if (!userId || !adminUser || adminUser.id !== userId) {
     return notFound();
   }
 
@@ -129,9 +130,7 @@ const Page = async () => {
               <TableRow>
                 <TableHead>Customer</TableHead>
                 <TableHead className="hidden sm:table-cell">Status</TableHead>
-                <TableHead className="hidden sm:table-cell">
-                  Purchase date
-                </TableHead>
+                <TableHead className="hidden sm:table-cell">Purchase date</TableHead>
                 <TableHead className="text-right">Amount</TableHead>
               </TableRow>
             </TableHeader>
