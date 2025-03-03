@@ -1,4 +1,6 @@
-// import { LoginLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs";
+"use client";
+
+import { SignInButton, SignUpButton } from "@clerk/nextjs";
 import Image from "next/image";
 import type { Dispatch, SetStateAction } from "react";
 import { buttonVariants } from "./ui/button";
@@ -41,12 +43,17 @@ const LoginModal = ({
         </DialogHeader>
 
         <div className="grid grid-cols-2 gap-6 divide-x divide-gray-200">
-          {/* <LoginLink className={buttonVariants({ variant: "outline" })}>
-            Login
-          </LoginLink>
-          <RegisterLink className={buttonVariants({ variant: "default" })}>
-            Sign up
-          </RegisterLink> */}
+          <SignInButton mode="modal">
+            <button className={buttonVariants({ variant: "outline" })}>
+              Login
+            </button>
+          </SignInButton>
+
+          <SignUpButton mode="modal">
+            <button className={buttonVariants({ variant: "default" })}>
+              Sign up
+            </button>
+          </SignUpButton>
         </div>
       </DialogContent>
     </Dialog>
