@@ -7,8 +7,6 @@ export async function POST(req: Request)
     try
     {
         const clerkEvent: WebhookEvent = await req.json();
-
-        // Ensure it's a user.created event
         if (clerkEvent.type === "user.created")
         {
             const { id, email_addresses } = clerkEvent.data;
