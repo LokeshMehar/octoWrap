@@ -21,7 +21,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const { toast } = useToast();
   const { id } = configuration;
   
-  const { isSignedIn } = useAuth(); // Clerk authentication
+  const { isSignedIn } = useAuth(); 
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   useEffect(() => setShowConfetti(true), []);
