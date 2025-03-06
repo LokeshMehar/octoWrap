@@ -21,8 +21,8 @@ export default  async function Home() {
                 <Image
                   src="/main-1.png"
                   alt="Snake Illustration"
-                  width={112}
-                  height={112}
+                  width={150}
+                  height={150}
                   className="w-full"
                 />
               </div>
