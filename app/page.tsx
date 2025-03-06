@@ -19,7 +19,7 @@ export default  async function Home() {
             <div className="relative mx-auto text-center lg:text-left flex flex-col items-center lg:items-start">
               <div className="absolute w-28 left-0 -top-20 hidden lg:block">
                 <Image
-                  src="/snake-1.png"
+                  src="/main-1.png"
                   alt="Snake Illustration"
                   width={112}
                   height={112}
