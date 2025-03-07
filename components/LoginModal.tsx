@@ -21,7 +21,7 @@ const LoginModal = ({
 }) => {
   return (
     <Dialog onOpenChange={setIsOpen} open={isOpen}>
-      <DialogContent>
+      <DialogContent className="z-50">
         <DialogHeader>
           <div className="relative mx-auto w-24 h-24 mb-2">
             <Image
@@ -42,18 +42,15 @@ const LoginModal = ({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid grid-cols-2 gap-6 divide-x divide-gray-200">
-          <SignInButton mode="modal">
-            <button className={buttonVariants({ variant: "outline" })}>
-              Login
-            </button>
-          </SignInButton>
+        <div className="grid grid-cols-2 gap-6">
+        <SignInButton mode="redirect">
+  <button className={buttonVariants({ variant: "outline" })}>Login</button>
+</SignInButton>
 
-          <SignUpButton mode="modal">
-            <button className={buttonVariants({ variant: "default" })}>
-              Sign up
-            </button>
-          </SignUpButton>
+<SignUpButton mode="redirect">
+  <button className={buttonVariants({ variant: "default" })}>Sign up</button>
+</SignUpButton>
+
         </div>
       </DialogContent>
     </Dialog>

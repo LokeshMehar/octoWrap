@@ -22,7 +22,7 @@ const Navbar = () => {
       <MaxWidthWrapper>
         <div className="inset-x-0 mx-auto flex h-14 w-full items-center justify-between rounded-xl bg-white/75 px-4 shadow-md backdrop-blur-lg transition-all dark:bg-gray-900 dark:text-white">
           <Link href="/" className="z-40 flex font-semibold">
-            case<span className="text-green-600 dark:text-green-400">cobra</span>
+            octo<span className="text-orange-600 dark:text-orange-400">Wrap</span>
           </Link>
 
           <div className="flex h-full items-center space-x-4">
