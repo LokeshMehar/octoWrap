@@ -12,7 +12,7 @@ export default  async function Home() {
 
 
   return (
-    <section className="bg-slate-50">
+    <section className="bg-gray-950">
       <section>
         <MaxWidthWrapper className="pb-24 pt-10 lg:grid lg:grid-cols-3 sm:pb-32 lg:gap-x-0 xl:gap-x-8 lg:pt-24 xl:pt-32 lg:pb-52 ">
           <div className="col-span-2 px-6 lg:px-0 lg:pt-4">
@@ -26,7 +26,7 @@ export default  async function Home() {
                   className="w-36 h-36"
                 />
               </div>
-              <h1 className="relative w-fit tracking-tight text-balance mt-16 font-bold !leading-tight text-gray-900 text-5xl md:text-6xl lg:text-7xl">
+              <h1 className="relative w-fit tracking-tight text-balance mt-16 font-bold !leading-tight text-slate-100 text-5xl md:text-6xl lg:text-7xl">
                 Your Image on a{" "}
                 <span className="bg-orange-500 px-2 text-white">Custom</span>{" "}
                 Phone Case
@@ -133,12 +133,12 @@ export default  async function Home() {
       </section>
 
       {/* Value Proposition Section */}
-      <section className="bg-slate-100 py-24">
+      <section className="bg-gray-950 py-24">
         <MaxWidthWrapper
           className={"flex flex-col items-center gap-16 sm:gap-32"}
         >
           <div className="flex flex-col lg:flex-row items-center gap-4 sm:gap-6">
-            <h2 className="order-1 mt-2 tracking-tight text-center text-balance !leading-tight font-bold text-5xl md:text-6xl text-gray-900">
+            <h2 className="order-1 mt-2 tracking-tight text-center text-balance !leading-tight font-bold text-5xl md:text-6xl text-slate-100">
               What our{" "}
               <span className="relative px-2">
                 customers{" "}
@@ -243,7 +243,7 @@ export default  async function Home() {
         <MaxWidthWrapper className="py-24">
           <div className="mb-12 px-6 lg:px-8">
             <div className="mx-auto max-w-2xl sm:text-center">
-              <h2 className="order-1 mt-2 tracking-tight text-center text-balance !leading-tight font-bold text-5xl md:text-6xl text-gray-900">
+              <h2 className="order-1 mt-2 tracking-tight text-center text-balance !leading-tight font-bold text-5xl md:text-6xl text-slate-100">
                 Upload your photo and get{" "}
                 <span className="relative px-2 bg-orange-500 text-white">
                   your own case
@@ -263,13 +263,13 @@ export default  async function Home() {
                 className="absolute top-[25rem] md:top-1/2 -translate-y-1/2 z-10 left-1/2 -translate-x-1/2 rotate-90 md:rotate-0"
               />
 
-              <div className="relative h-80 md:h-full w-full md:justify-self-end max-w-sm rounded-xl bg-gray-900/5 ring-inset ring-gray-900/10 lg:rounded-2xl">
+              <div className="relative h-80 md:h-full w-full md:justify-self-end max-w-sm rounded-xl bg-slate-100text-slate-100/5 ring-inset ring-slate-100text-slate-100/10 lg:rounded-2xl">
                 <Image
                   src="/horse.jpg"
                   width={256}
                   height={256}
                   alt=""
-                  className="rounded-md object-cover bg-white shadow-2xl ring-1 ring-gray-900/10 h-full w-full"
+                  className="rounded-md object-cover bg-white shadow-2xl ring-1 ring-slate-100text-slate-100/10 h-full w-full"
                 />
               </div>
 

@@ -9,8 +9,6 @@ import {
 } from "@clerk/nextjs";
 import { buttonVariants } from "./ui/button";
 import { ArrowRight } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
 // import ThemeSwitcher from "./theme/theme-switcher";
 
 const Navbar = () => {
@@ -18,14 +16,6 @@ const Navbar = () => {
   const isAdmin = user?.emailAddresses.some(
     (email) => email.emailAddress === process.env.NEXT_PUBLIC_ADMIN_EMAIL
   );
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
 
   return (
     <nav className="sticky top-4 z-50">
@@ -36,13 +26,7 @@ const Navbar = () => {
           </Link>
 
           <div className="flex h-full items-center space-x-4">
-          <button
-  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-  className="p-2 bg-gray-200 dark:bg-gray-800 rounded"
->
-  {mounted && theme === "dark" ? "☀️ Light" : "🌙 Dark"}
-</button>
-
+            {/* <ThemeSwitcher /> */}
             {isSignedIn ? (
               <>
                 <SignOutButton>

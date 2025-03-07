@@ -25,7 +25,8 @@ const config = {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))', // Check your --primary value
+					DEFAULT: 'hsl(var(--primary))',
+					foreground: 'hsl(var(--primary-foreground))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -50,7 +51,97 @@ const config = {
 				card: {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
-				}
+				},
+				// Additional custom colors for your specific needs
+				orange: {
+					50: '#fff8e6',
+					100: '#ffecc6',
+					200: '#ffd580',
+					300: '#ffbf3f',
+					400: '#ffac00', // --primary equivalent (30 100% 50%)
+					500: '#e69900',
+					600: '#cc7a00',
+					700: '#995c00',
+					800: '#663d00',
+					900: '#331f00',
+				},
+				'dark-blue': {
+					50: '#e6eeff',
+					100: '#c6d9ff',
+					200: '#80a6ff',
+					300: '#3973ff',
+					400: '#0047ff',
+					500: '#0038cc',
+					600: '#002b99',
+					700: '#002080',
+					800: '#001566',
+					900: '#000b33',
+				},
+			},
+			typography: {
+				DEFAULT: {
+					css: {
+						maxWidth: '65ch',
+						color: 'hsl(var(--foreground))',
+						'[class~="lead"]': {
+							color: 'hsl(var(--foreground))',
+						},
+						a: {
+							color: 'hsl(var(--primary))',
+							'&:hover': {
+								color: 'color-mix(in srgb, hsl(var(--primary)), transparent 20%)',
+							},
+						},
+						strong: {
+							color: 'hsl(var(--foreground))',
+						},
+						'ol > li::marker': {
+							color: 'hsl(var(--foreground))',
+						},
+						'ul > li::marker': {
+							color: 'hsl(var(--foreground))',
+						},
+						hr: {
+							borderColor: 'hsl(var(--border))',
+						},
+						blockquote: {
+							color: 'hsl(var(--foreground))',
+							borderLeftColor: 'hsl(var(--border))',
+						},
+						h1: {
+							color: 'hsl(var(--foreground))',
+						},
+						h2: {
+							color: 'hsl(var(--foreground))',
+						},
+						h3: {
+							color: 'hsl(var(--foreground))',
+						},
+						h4: {
+							color: 'hsl(var(--foreground))',
+						},
+						'figure figcaption': {
+							color: 'hsl(var(--muted-foreground))',
+						},
+						code: {
+							color: 'hsl(var(--foreground))',
+						},
+						'a code': {
+							color: 'hsl(var(--primary))',
+						},
+						pre: {
+							color: 'hsl(var(--foreground))',
+							backgroundColor: 'hsl(var(--muted))',
+						},
+						thead: {
+							color: 'hsl(var(--foreground))',
+							borderBottomColor: 'hsl(var(--border))',
+						},
+						'tbody tr': {
+							borderBottomColor: 'hsl(var(--border))',
+						},
+					},
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
