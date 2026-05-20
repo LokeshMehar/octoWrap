@@ -2,11 +2,8 @@ import { db } from "@/db";
 import sharp from "sharp";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { z } from "zod";
-import { PrismaClient } from '@prisma/client';
 
 const f = createUploadthing();
-
-const prisma = new PrismaClient()
 
 export const ourFileRouter = {
   imageUploader: f({ image: { maxFileSize: "4MB" } })
@@ -30,7 +27,7 @@ export const ourFileRouter = {
       if (!configId)
       {
         console.log("Creating new configuration in the database...");
-        const configuration = await prisma.configuration.create({
+        const configuration = await db.configuration.create({
           data: {
             croppedImageUrl: file.url,
             imageUrl: file.url,
