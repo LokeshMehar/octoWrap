@@ -31,6 +31,18 @@ export const createCheckoutSession = async ({
     }
 
     const userId = user.id;
+    const userEmail = user.emailAddresses?.[0]?.emailAddress ?? "";
+
+    // Ensure the user exists in our database (they may not if they
+    // signed in via the checkout modal and the auth-callback was skipped)
+    await db.user.upsert({
+      where: { id: userId },
+      create: {
+        id: userId,
+        email: userEmail,
+      },
+      update: {},
+    });
 
     const { finish, material } = configuration;
 

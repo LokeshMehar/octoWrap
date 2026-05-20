@@ -23,7 +23,6 @@ const Page = () => {
     queryFn: async () => await getAuthStatus(),
     retry: true,
     retryDelay: 500,
-    enabled: !configId,
   });
 
   useEffect(() => {
